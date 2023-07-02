@@ -1,48 +1,41 @@
 import os
-os.system('pip uninstall discord')
-os.system('pip install discord.py==1.7.3')
-import discord
-from discord.ext import commands
-import os
-import base64
-import sys
-import asyncio
-import colorama
+os.system('pip uninstall selfcord')
+os.system('pip install selfcord.py')
+import selfcord
 from colorama import Fore, Back, Style
 
-prefix = '.'
+prefixes = ['.', '>']
 toxxable = ['fag', 'Fag', 'kys', 'Kys', 'kill yourself', 'Kill yourself', 'kill', 'Kill', 'doxbin', 'gore', 'nigger', 'Nigger', 'niggers', 'Niggers', 'faggot', 'Faggot', 'FAggoT' 'Doxbin', 'd01ksb1n', 'dox', 'doxxing', 'doxx', 'Doxx', 'Doxxing', 'token', 'tok3n', 'give me your token', 'jewcord', 'Jewcord', 'Hitler', 'Jews', 'jews', 'hitler', 'nazi', 'Nazi', 'Heil Hitler', '1488', 'Heil Hitler', 'heil', 'Heil', 'blacks', 'Nazi Germany', 'Taiwan' , 'raid', 'raiding', 'raiders', 'rayd', 'Im raiding', 'raided', 'cp', 'Gore', 'child porn', 'pedo', 'Pedo', 'pedophile', 'Pedophile', 'nuke', 'Nuke', 'Nuking', 'nuking', 'Im nuking', 'nuking servers', 'Nuking servers', 'Nuking Servers', 'white supremacy', 'White supremacy', 'nigga', 'Nigga']
 
 token = input(f"{Fore.LIGHTYELLOW_EX}[+] Token : {Style.RESET_ALL}")
 
-intents = discord.Intents().all()
-client = discord.Client()
-client = commands.Bot(command_prefix=prefix, self_bot=True, intents=intents)
+bot = selfcord.Bot(prefixes=prefixes)
 
-class main:
-  def clear():
-    try:
-      os.system('clear')
-    except:
-      os.system('cls')
+def clear():
+  try:
+    os.system('clear')
+  except:
+    os.system('cls')
 
-@client.event
-async def on_ready():
+@bot.on("ready")
+async def ready(time):
   main.clear()
   print(f"{Fore.GREEN}{client.user} online{Style.RESET_ALL}")
   print(f"{Fore.YELLOW}Prefix {Fore.LIGHTYELLOW_EX}{prefix}{Style.RESET_ALL}")
+  print(f"{Fore.YELLOW}Took {time} seconds to start")
   try:
     await client.change_presence(status=discord.Status.dnd, activity=discord.Game("ཌⱤ₲ད \\ DM To Join // ཌⱤ₲ད"))
   except Exception as e:
     print(e)
 
-@client.event
-async def on_message(message):
-  if message.content in toxxable:
-    await asyncio.sleep(10)
-    await message.delete()
+
+
+
+@client.on("message")
+async def message_deleter(message):
+  if any(message.content in word for word in toxxable):
+    await message.channel.delayed_delete(message, 10)
     print(f"[+] Deleted a message: {message.content} (REASON: Toxxable)")
-    await asyncio.sleep(3)
   if ".status" in message.content:
     try:
       command, status = message.content.split()
